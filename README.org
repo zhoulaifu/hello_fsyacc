@@ -1,0 +1,80 @@
+* About
+The repo provides instructions of how to use FsYacc together with
+FsLex on a small example.  The example is taken from Peter Sestoft's
+PLC book (https://www.itu.dk/people/sestoft/plc/expr.zip), with minor
+adjustment: (1) remove an obsolete namespace; and (2) simplify a bit
+the main program Parse.fs.
+* Files
+
+The repo has the following files, explained during the lecture
+
+- Abstract syntax: Absyn.fs
+- Lexer specification: ExprLex.fsl
+- Parser specification: ExprPar.fsy
+- Main program: Parse.fs
+
+You need to access the following DLLs (assuming you will use dotnet to run FsLexYacc)
+- fslex.dll
+- fsyacc.dll
+- FsLexYacc.Runtime.dll
+
+* Command lines to use
+
+First, generate the parser:
+- $ dotnet fsyacc.dll --module ExprPar ExprPar.fsy
+
+Then, generate the lexer:
+- $ dotnet fslex.dll --unicode ExprLex.fsl
+
+As a sanity check, make sure that the parser, "ExprPar.fs" and the lexer "ExprLex.fs" are generated.
+
+At last, test interactively:
+- $ fsharpi -r FsLexYacc.Runtime.dll Absyn.fs  ExprPar.fs ExprLex.fs Parse.fs
+
+On the fsharpi console, try the following
+- open Parse;;
+- fromString "x + 52 * wk";;
+
+On an Mac OS terminal, I got
+#+BEGIN_SRC
+val it : Absyn.expr = Prim ("+",Var "x",Prim ("*",CstI 52,Var "wk"))
+#+END_SRC
+
+
+* how to run it on visual studio
+
+I used info from https://fsprojects.github.io/FsLexYacc/ to make things work.  My project file looks like this:
+
+#+BEGIN_SRC
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+  </PropertyGroup>
+  <ItemGroup>
+    <None Include="ExprLex.fsl" />
+    <FsYacc Include="ExprPar.fsy">
+      <OtherFlags>--module Parser</OtherFlags>
+    </FsYacc>
+  </ItemGroup>
+  <ItemGroup>
+    <FsLex Include="ExprLex.fsl">
+      <OtherFlags>--unicode</OtherFlags>
+    </FsLex>
+    <None Include="ExprPar.fsy" />
+    <Compile Include="Absyn.fs" />
+    <Compile Include="ExprPar.fs" />
+    <Compile Include="ExprLex.fs" />
+    <Compile Include="Parse.fs" />
+    <PackageReference Include="FsLexYacc" Version="10.0.0" />
+  </ItemGroup>
+</Project>
+#+END_SRC
+
+
+
+On an Mac Visual Studio Community, I got:
+#+BEGIN_SRC
+Hello World from F# Parser Lexer!
+Prim ("+",CstI 2,Prim ("*",CstI 3,CstI 5))
+#+END_SRC
