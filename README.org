@@ -23,12 +23,10 @@ You need to access the following DLLs (assuming you will use dotnet to run FsLex
 First, generate the parser:
 - $ dotnet fsyacc.dll \-\-module ExprPar ExprPar.fsy
 
-(two "-" above)
 
 Then, generate the lexer:
-- $ dotnet fslex.dll --unicode ExprLex.fsl
+- $ dotnet fslex.dll \-\-unicode ExprLex.fsl
 
-(two "-" above)
 
 As a sanity check, make sure that the parser, "ExprPar.fs" and the lexer "ExprLex.fs" are generated.
 
