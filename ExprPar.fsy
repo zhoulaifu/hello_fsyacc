@@ -7,13 +7,13 @@
 
 %token <int> CSTINT
 %token <string> NAME
-%token PLUS MINUS TIMES DIVIDE EQ
+%token PLUS MINUS TIMES DIV EQ EQ2 COMMA
 %token END IN LET
-%token LPAR RPAR
+%token LPAR RPAR LPAR2 RPAR2 LPAR3 RPAR3
 %token EOF
 
 %left MINUS PLUS        /* lowest precedence  */
-%left TIMES             /* highest precedence */
+%left TIMES DIV            /* highest precedence */
 
 %start Main
 %type <Absyn.expr> Main 
@@ -29,8 +29,14 @@ Expr:
   | CSTINT                              { CstI $1           }
   | MINUS CSTINT                        { CstI (- $2)       }
   | LPAR Expr RPAR                      { $2                }
+  | LPAR2 Expr RPAR2                    { $2                } 
   | LET NAME EQ Expr IN Expr END        { Let($2, $4, $6)   }
+  
+  | LPAR3 NAME EQ2 Expr IN Expr RPAR3        { Let($2, $4, $6)   }
+ 
   | Expr TIMES Expr                     { Prim("*", $1, $3) }
   | Expr PLUS  Expr                     { Prim("+", $1, $3) }  
-  | Expr MINUS Expr                     { Prim("-", $1, $3) } 
+  | Expr MINUS Expr                     { Prim("-", $1, $3) }
+  | Expr DIV Expr                       { Prim("/", $1, $3) }
+  | NAME LPAR Expr RPAR                 { Call1($1, $3) }
 ;

@@ -8,7 +8,7 @@ module ExprLex
 open FSharp.Text.Lexing
 open ExprPar
 
-let lexemeAsString lexbuf = 
+let lexemeAsString lexbuf =
     LexBuffer<char>.LexemeString lexbuf
 
 (* Scan keywords as identifiers and use this function to distinguish them. *)
@@ -31,9 +31,17 @@ rule Token = parse
   | '+'             { PLUS  } 
   | '-'             { MINUS } 
   | '*'             { TIMES }
-  | '='             { EQ    } 
+  | '/'             { DIV }
+  | '='             { EQ    }
+  | ['<']['-']             { EQ2    } 
   | '('             { LPAR  } 
-  | ')'             { RPAR  } 
+  | ')'             { RPAR  }
+  |'['              {LPAR2}
+  |']'              {RPAR2}
+  |'{'              {LPAR3}
+  |'}'              {RPAR3}
+  |','              {COMMA}
+
   | eof             { EOF   }
   | _               { failwith "Lexer error: illegal symbol" }
   
