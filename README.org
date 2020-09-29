@@ -33,8 +33,6 @@ As a sanity check, make sure that the parser, "ExprPar.fs" and the lexer "ExprLe
 At last, test interactively:
 - $ dotnet fsi -r FsLexYacc.Runtime.dll Absyn.fs ExprPar.fs ExprLex.fs Parse.fs
 
-Previously I suggested the following, which works on my machine. But the above is preferred because only "dotnet" is used. 
-- $ fsharpi -r FsLexYacc.Runtime.dll Absyn.fs  ExprPar.fs ExprLex.fs Parse.fs
 
 On the console, try the following
 - open Parse;;
